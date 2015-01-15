@@ -18,7 +18,7 @@
         opts: '=options'
       },
       link: function($scope, element, attrs, modelCtrl) {
-        var customOpts, el, opts, _formatted, _getPicker, _init, _validateMax, _validateMin;
+        var customOpts, el, opts, watcher, _formatted, _getPicker, _init, _validateMax, _validateMin;
         el = $(element);
         customOpts = $parse(attrs.dateRangePicker)($scope, {});
         opts = angular.extend(dateRangePickerConfig, customOpts);
@@ -141,9 +141,12 @@
           });
         }
         if (attrs.options) {
-          return $scope.$watch('opts', function(newOpts) {
-            opts = angular.extend(opts, newOpts);
-            return _init();
+          return watcher = $scope.$watch('opts', function(newOpts, oldOpts) {
+            if (newOpts && newOpts || oldOpts) {
+              opts = newOpts;
+              _init();
+              return watcher();
+            }
           });
         }
       }

@@ -136,8 +136,10 @@ picker.directive('dateRangePicker', ($compile, $timeout, $parse, dateRangePicker
             )
 
         if attrs.options
-            $scope.$watch('opts', (newOpts) ->
-                opts = angular.extend(opts, newOpts)
-                _init()
+            watcher = $scope.$watch('opts', (newOpts, oldOpts) ->
+                if (newOpts and newOpts or oldOpts)
+                    opts = newOpts;
+                    _init()
+                    watcher(); #destroys the watcher
             )
 )
